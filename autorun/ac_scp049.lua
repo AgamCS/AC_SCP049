@@ -36,6 +36,7 @@ if SERVER then
     util.AddNetworkString("ac_scp049.playSound")
     util.AddNetworkString("ac_scp049.setupPlayer")
     util.AddNetworkString("ac_scp049.startMix")
+    util.AddNetworkString("ac_scp049.requestCureList")
 end
 
 if CLIENT then

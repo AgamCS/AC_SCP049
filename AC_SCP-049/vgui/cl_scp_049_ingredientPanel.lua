@@ -53,7 +53,13 @@ function PANEL:GetIngredient()
 end
 
 function PANEL:SetCure(ing1, ing2)
-    local cureTable = AC_SCP49.getCure(ing1 .. ing2) || AC_SCP49.getCure(ing2 .. ing1)
+    local cureTable
+    if !ing2 then
+        cureTable = AC_SCP49.getCure(ing1)
+    else
+       cureTable = AC_SCP49.getCure(ing1 .. ing2) || AC_SCP49.getCure(ing2 .. ing1)
+    end
+
     if !cureTable then return end
     self.__cure = cureTable.class
     self.modelPanel:SetColor(cureTable.color)

@@ -166,7 +166,7 @@ function PANEL:cureMenuLayout()
         surface.DrawRect(0, 0, w, h)
         surface.SetDrawColor(potionOutline)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
-        draw.SimpleText(string.format(AC_SCP49.getLang("cure_bag_bind"), string.upper(language.GetPhrase(input.LookupBinding("+use"))), language.GetPhrase(input.LookupBinding("+attack"))), "AC_SCP049.Font", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(string.format(AC_SCP49.getLang("cure_bag_bind"), string.upper(input.LookupBinding("+use")), input.LookupBinding("+attack")), "AC_SCP049.Font", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 

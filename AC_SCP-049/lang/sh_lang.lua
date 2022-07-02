@@ -11,6 +11,7 @@ AC_SCP49.lang = {
     ["swep_hud_text"] = "[%s] Open cure mixer",
     ["cure_title"] = "Cure mixer",
     ["cure_instructions"] = "Pick two potions to create a cure, different combinations create different effects",
+    ["cure_bag_bind"] = "[%s + %s] Open cure bag",
     ["cure_name"] = "%s and %s Cure",
     ["start_mixing"] = "Mix Cure",
     ["is_mixing"] = "Mixing Cure",

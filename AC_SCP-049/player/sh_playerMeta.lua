@@ -21,11 +21,6 @@ function _P:getCures()
     end
 end
 
-function _P:removeCure(cureName)
-    if !self.cures[cureName] then return end
-    self.cures[cureName] = {}
-end
-
 function _P:getCures()
     return self.cures
 end

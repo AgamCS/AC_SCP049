@@ -37,6 +37,7 @@ if SERVER then
     util.AddNetworkString("ac_scp049.setupPlayer")
     util.AddNetworkString("ac_scp049.startMix")
     util.AddNetworkString("ac_scp049.requestCureList")
+    util.AddNetworkString("ac_scp049.requestCurrentCure")
 end
 
 if CLIENT then

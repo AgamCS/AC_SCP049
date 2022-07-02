@@ -20,7 +20,7 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
-SWEP.currentCure = ""
+
 
 SWEP.Primary.AttackDelay = 0.3 // Delay before you are able to attempt to kill again
 SWEP.Primary.AttackRange = 100 // Range 

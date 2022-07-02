@@ -121,10 +121,10 @@ if CLIENT then
 end
 
 function SWEP:Think()
-    local owner = self:GetOwner()
-    local min, max = owner:OBBMins(), owner:OBBMaxs()
-    local startpos = owner:GetPos()
     if SERVER then
+        local owner = self:GetOwner()
+        local min, max = owner:OBBMins(), owner:OBBMaxs()
+        local startpos = owner:GetPos()
         local tr = util.TraceHull(
             {
                 start = startpos,
@@ -139,5 +139,22 @@ function SWEP:Think()
             if AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then return end 
             tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
-end
 
+    if CLIENT then
+        local key1, key2 = input.GetKeyCode(input.LookupBinding("+use")), input.GetKeyCode(input.LookupBinding("+attack"))
+        if input.IsButtonDown(key1) && input.IsButtonDown(key2) then
+            local scrw, scrh = ScrW(), ScrH()
+            if IsValid(AC_SCP49.cureBag) then return end
+            AC_SCP49.cureBag = vgui.Create("scp_049_cureBag")
+            AC_SCP49.cureBag:SetSize(scrw * 0.4, scrh * 0.3)
+            AC_SCP49.cureBag:Center()
+        end
+        
+    end
+end
+concommand.Add("removetest", function()
+    if IsValid(AC_SCP49.cureBag) then
+        AC_SCP49.cureBag:Remove()
+    end
+
+end)

@@ -157,6 +157,17 @@ function PANEL:cureMenuLayout()
         draw.SimpleText(AC_SCP49.getLang("is_mixing") .. " " .. timeleft, "AC_SCP049.Font", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
+    local infoPanel = vgui.Create("DPanel", self)
+    infoPanel:SetSize(mixButtonW, mixButtonH)
+    infoPanel:SetPos( (mixButtonW * 0.0001) + (mixButtonW / 2 ), (pH * 0.4) + (pH / 2)  )
+    infoPanel.Paint = function(s, w, h)
+        local ply = LocalPlayer()
+        surface.SetDrawColor(potionBackground)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(potionOutline)
+        surface.DrawOutlinedRect(0, 0, w, h, 2)
+        draw.SimpleText(string.format(AC_SCP49.getLang("cure_bag_bind"), string.upper(language.GetPhrase(input.LookupBinding("+use"))), language.GetPhrase(input.LookupBinding("+attack"))), "AC_SCP049.Font", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
 end
 
 function PANEL:OnSizeChanged()

@@ -113,6 +113,7 @@ end
 
 if CLIENT then
     hook.Add("InitPostEntity", "AC_SCP049.SetupPlayer", function()
+        local ply = LocalPlayer()
         net.Start("ac_scp049.setupPlayer")
         net.SendToServer()
         ply.cures = {}

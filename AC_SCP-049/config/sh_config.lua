@@ -138,6 +138,12 @@ AC_SCP49.config.cureLimit = 1
 // The model used for 049-2 instances
 AC_SCP49.config.zombieModel = "models/player/zombie_classic.mdl"
 
+// One of the buttons that needs to be pressed in order for the cure bag to open
+AC_SCP49.config.cureBagBind = IN_USE
+
+// Second button that needs to be pressed to open the cure bag. If set to NULL, only the first bind will be used
+AC_SCP49.config.cureBagBind2 = IN_ATTACK
+
 // Ingredients for cures
 AC_SCP49.config.ingredients = {
     ["red"] = {

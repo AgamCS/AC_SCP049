@@ -57,9 +57,11 @@ function SWEP:PrimaryAttack()
     if !tr.Entity:IsValid() then return end    
     if tr.Entity:GetNW2Bool("IsPlayerRagdoll", false) then
         if !tr.Entity.DeathRagdoll then return end
-        local victimPos = tr.Entity:GetPos()
         local victim = tr.Entity.DeathRagdoll:GetOwner()
-        victim:applyCure("redyellow", victimPos)
+        owner:applyCureToVictim(owner:getCurrentCure(), tr.Entity)
+        tr.Entity.DeathRagdoll.IsDeath = false
+        print(tr.Entity.DeathRagdoll)
+        SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)
     elseif tr.Entity:IsValid() && !AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then
         tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
@@ -94,14 +96,16 @@ end
 if CLIENT then
     function SWEP:DrawHUD()
         local owner = self:GetOwner()
-        draw.SimpleText(string.format(AC_SCP49.getLang("swep_hud_text"), input.LookupBinding("+attack2")), "AC_SCP049.FontScale12", ScrW() * 0.175, ScrH() * 0.97, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local scrw, scrh = ScrW(), ScrH()
+        draw.SimpleText(string.format(AC_SCP49.getLang("swep_hud_text"), input.LookupBinding("+attack2")), "AC_SCP049.FontScale12", scrw * 0.175, scrh * 0.97, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(string.format(AC_SCP49.getLang("swep_current_text"), owner:getCurrentCureName() or AC_SCP49.getLang("none")), "AC_SCP049.FontScale12", scrw * 0.175, scrh * 0.915, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if !owner:isMixing() then return end
         if AC_SCP49.testPanel && AC_SCP49.testPanel:IsVisible() then return end
         local time = AC_SCP49.mixStartTime  + AC_SCP49.config.mixTime - AC_SCP49.mixStartTime 
         local curtime = CurTime() - AC_SCP49.mixStartTime 
         local timeleft = math.Round(timer.TimeLeft(owner:SteamID64() .. " ac_scp049.mixingTimer"), 1) 
         local endtime = AC_SCP49.config.mixTime - timeleft
-        local scrw, scrh = ScrW(), ScrH()
+        
         local x, y, width, height = scrw * 0.5 - scrw * 0.15, scrh * 0.8 - scrh * 0.05, scrw * 0.3, scrh * 0.07
         local status = math.Clamp(curtime / time, 0, 1)
         local barWidth = status * width - 16
@@ -117,12 +121,14 @@ if CLIENT then
         draw.SimpleText("MIXING CURE", "AC_SCP049.Font", scrw * 0.5 , scrh * 0.8 - 20, color_white, 1, 1)
         draw.SimpleText(timeleft, "AC_SCP049.FontScale12", scrw * 0.5 , scrh * 0.8, color_white, 1, 1)
 
+        
+
     end
 end
 
 function SWEP:Think()
+    local owner = self:GetOwner()
     if SERVER then
-        local owner = self:GetOwner()
         local min, max = owner:OBBMins(), owner:OBBMaxs()
         local startpos = owner:GetPos()
         local tr = util.TraceHull(
@@ -148,13 +154,26 @@ function SWEP:Think()
             AC_SCP49.cureBag = vgui.Create("scp_049_cureBag")
             AC_SCP49.cureBag:SetSize(scrw * 0.4, scrh * 0.3)
             AC_SCP49.cureBag:Center()
+            AC_SCP49.cureBag:ShowCloseButton()
+            AC_SCP49.cureBag:createCures()    
         end
         
     end
 end
-concommand.Add("removetest", function()
-    if IsValid(AC_SCP49.cureBag) then
-        AC_SCP49.cureBag:Remove()
-    end
 
-end)
+if CLIENT then
+    hook.Add("HUDPaint", "AC_SCP49_DEBUG", function()
+        local scrw, scrh = ScrW(), ScrH()
+        local yspace = scrh * 0.4
+        local cures = LocalPlayer():getCures()
+        draw.SimpleText("CURE BAG DEBUG", "AC_SCP049.Font", scrw * 0.05, scrh * 0.3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        if !cures then return end
+        for _, t in pairs(cures) do
+            for k, v in pairs(t) do
+                local str = IsColor(v) and "Color" or v
+                draw.SimpleText(str, "AC_SCP049.Font", scrw * 0.05, yspace, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                yspace = yspace + 25
+            end
+        end
+    end)
+end

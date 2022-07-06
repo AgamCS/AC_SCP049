@@ -5,7 +5,7 @@ local potionBackground = Color(33, 33, 33)
 local hoverColor = Color(100, 100, 200)
 local progress = Color(150, 150, 150)
 
-local test = Color(255,0 ,0)
+
 local PANEL = {}
 
 local t = {
@@ -145,10 +145,11 @@ function PANEL:cureMenuLayout()
     mixProgress:SetMouseInputEnabled(false)
 
     mixProgress.Paint = function(s, w, h)
-        if !LocalPlayer():isMixing() then return end
+        local ply = LocalPlayer()
+        if !ply:isMixing() then return end
         local time = AC_SCP49.mixStartTime + AC_SCP49.config.mixTime - AC_SCP49.mixStartTime
         local curTime = CurTime() - AC_SCP49.mixStartTime
-        local timeleft = math.Round(timer.TimeLeft(LocalPlayer():SteamID64() .. " ac_scp049.mixingTimer"), 1) 
+        local timeleft = math.Round(timer.TimeLeft(ply:SteamID64() .. " ac_scp049.mixingTimer"), 1) 
         local endtime = AC_SCP49.config.mixTime - timeleft
         local status = math.Clamp(curTime / time, 0, 1)
         local barWidth = status * w - 16
@@ -161,7 +162,6 @@ function PANEL:cureMenuLayout()
     infoPanel:SetSize(mixButtonW, mixButtonH)
     infoPanel:SetPos( (mixButtonW * 0.0001) + (mixButtonW / 2 ), (pH * 0.4) + (pH / 2)  )
     infoPanel.Paint = function(s, w, h)
-        local ply = LocalPlayer()
         surface.SetDrawColor(potionBackground)
         surface.DrawRect(0, 0, w, h)
         surface.SetDrawColor(potionOutline)
@@ -181,7 +181,7 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(self.backgroundColor)
     surface.DrawRect(0, 0, w, h)
     draw.SimpleText(self.Title, "AC_SCP049.FontScale12", 0 + 5, 0 + 15, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    draw.SimpleText(string.format(AC_SCP49.getLang("cure_name"),  ing1, ing2), "AC_SCP049.FontScale12", w * 0.5, h * 0.15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(string.format(AC_SCP49.getLang("cure_name"), ing1, ing2), "AC_SCP049.FontScale12", w * 0.5, h * 0.15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(AC_SCP49.getLang("cure_instructions"), "AC_SCP049.Font", w * 0.5, h * 0.67, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText("+", "AC_SCP049.Symbol", w * 0.35, h * 0.4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText("=", "AC_SCP049.Symbol", w * 0.65, h * 0.4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

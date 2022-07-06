@@ -21,7 +21,7 @@ function PANEL:ShowCloseButton()
     self.closeButton:SetPos(pW * 0.89, 0 + pH * 0.005)
     self.closeButton:SetText("")
     self.closeButton.DoClick = function()
-        self:Hide()
+        self:Remove()
     end
     
     self.closeButton.Paint = function(s, w, h)

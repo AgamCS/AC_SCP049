@@ -190,7 +190,7 @@ function AC_SCP49.getIngredient(name)
 end
 
 function AC_SCP49.getIngredientName(name)
-    if !name or !AC_SCP49.config.ingredients[name] then return "None" end
+    if !name or !AC_SCP49.config.ingredients[name] then return AC_SCP49.getLang("none") end
     return AC_SCP49.config.ingredients[name].name
 end
 

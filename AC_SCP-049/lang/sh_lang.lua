@@ -8,7 +8,6 @@ AC_SCP49.lang = {
     ["pink_potion"] = "Pink",
     ["white_potion"] = "White",
 
-    ["swep_hud_text"] = "[%s] Open cure mixer",
     ["cure_title"] = "Cure mixer",
     ["cure_instructions"] = "Pick two potions to create a cure, different combinations create different effects",
     ["cure_bag_bind"] = "[%s + %s] Open cure bag",
@@ -17,7 +16,14 @@ AC_SCP49.lang = {
     ["is_mixing"] = "Mixing Cure",
     ["cure_limit"] = "You cannot carry any more cures",
     ["already_mixing"] = "You are already mixing a cure",
+    ["done_mixing"] = "You have finished mixing the cure",
+    ["none"] = "None",
 
+    // Cure bag
+    ["cure_bag"] = "Cure Bag",
+    ["no_cures"] = "You have no cures",
+    ["equipped_cure"] = "You equipped the %s",
+    ["unequipped_cure"] = "You put away the %s",
 
     // Sound menu
     ["soundMenu.company"] = "Company",
@@ -40,6 +46,12 @@ AC_SCP49.lang = {
     ["soundMenu.resisting"] = "Stop resisting",
     ["soundMenu.found"] = "There you are",
     ["soundMenu.hide"] = "There's no need to hide",
+
+
+    // Weapon HUD
+    ["swep_hud_text"] = "[%s] Open cure mixer",
+    ["swep_current_text"] = "Equipped Cure: %s"
+
     
 }
 

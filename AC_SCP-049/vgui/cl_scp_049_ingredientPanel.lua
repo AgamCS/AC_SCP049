@@ -84,26 +84,28 @@ function PANEL:createModelPanel()
     self.modelPanel:Dock(FILL)
     self.modelPanel:SetModel(self.__model)
     self.modelPanel:SetColor(nilColor)
+    self.modelPanel:SetMouseInputEnabled(false)
     self.modelPanel.LayoutEntity = function()
 
     end
 
-    self.modelPanel.DoClick = function()
-        if self:GetIngredient() then
-            self:RemoveIngredient()
-        end
-        if self.__isIngredient && self.__curePanel then
-            self.__curePanel:RemoveCure()
-        end
-    end
-
 end
 
-function PANEL:SetModel(model)
+function PANEL:DoClick()
+    if self:GetIngredient() then
+        self:RemoveIngredient()
+    end
+    if self.__isIngredient && self.__curePanel then
+        self.__curePanel:RemoveCure()
+    end
+end
+
+function PANEL:SetModel(model, scale)
+    scale = scale or 4.5
     self.__model = model
     self.modelPanel:SetModel(model)
     local ent = self.modelPanel:GetEntity()
-    ent:SetModelScale(4.5)
+    ent:SetModelScale(scale)
     ent:SetPos(ent:GetPos() + Vector(0, 0, 25))
 end
 

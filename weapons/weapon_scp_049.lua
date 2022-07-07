@@ -58,7 +58,9 @@ function SWEP:PrimaryAttack()
     if tr.Entity:GetNW2Bool("IsPlayerRagdoll", false) then
         if !tr.Entity.DeathRagdoll then return end
         local victim = tr.Entity.DeathRagdoll:GetOwner()
-        owner:applyCureToVictim(owner:getCurrentCure(), tr.Entity)
+        local cureType = owner:getCurrentCure()
+        if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") return end
+        owner:applyCureToVictim(cureType, tr.Entity)
         tr.Entity.DeathRagdoll.IsDeath = false
         print(tr.Entity.DeathRagdoll)
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)

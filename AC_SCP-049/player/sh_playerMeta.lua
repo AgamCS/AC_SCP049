@@ -62,7 +62,6 @@ end
 
 function _P:applyCureToVictim(cureType, victim)
     if !SERVER then return end
-    if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") return end
     if !self.cures[cureType] || self.cures[cureType].amount < 1 then return end
     cureType = AC_SCP49.getCure(cureType) 
     if !cureType then return end
@@ -75,6 +74,7 @@ function _P:applyCureToVictim(cureType, victim)
     self.cures[cureType].amount = self.cures[cureType].amount - 1
     if self.cures[cureType].amount < 1 then
         self.cures[cureType] = nil
+        self:unequipCure()
         net.Start("ac_scp049.requestRemoveCure")
             net.WriteString(cureType)
         net.Send(self)
@@ -166,9 +166,11 @@ if CLIENT then
     end)
 
     net.Receive("ac_scp049.requestRemoveCure", function()
+        local ply = LocalPlayer()
         local cureType = net.ReadString()
-        if self.cures[cureType] then
-            self.cures[cureType] = nil
+        if ply.cures[cureType] then
+            ply.cures[cureType] = nil
+            ply:unequipCure()
         end
     end)
 

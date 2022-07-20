@@ -10,6 +10,8 @@ SWEP.DrawAmmo = false
 
 SWEP.ViewModel = "models/scp049/weapons/c_scp049.mdl"
 SWEP.WorldModel = ""
+SWEP.UseHands = true
+
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -23,7 +25,7 @@ SWEP.Secondary.Automatic = false
 
 
 SWEP.Primary.AttackDelay = 0.3 // Delay before you are able to attempt to kill again
-SWEP.Primary.AttackRange = 100 // Range 
+SWEP.Primary.AttackRange = 40 // Range 
 SWEP.Primary.CureRange = 100
 
 // HUD COLORS
@@ -43,7 +45,9 @@ function SWEP:Deploy()
 end
 
 function SWEP:PrimaryAttack()
+    if !IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
+    owner:LagCompensation( true )
     self:SetSequence("flask_mix")
     self:ResetSequence("flask_mix")
     self:SetNextPrimaryFire( CurTime() + self.Primary.AttackDelay )
@@ -54,19 +58,27 @@ function SWEP:PrimaryAttack()
         filter = owner,
         ignoreworld = true,
     })
-    if !tr.Entity:IsValid() then return end    
+    if !tr.Entity:IsValid() then owner:LagCompensation( false ) return end    
     if tr.Entity:GetNW2Bool("IsPlayerRagdoll", false) then
         if !tr.Entity.DeathRagdoll then return end
-        local victim = tr.Entity.DeathRagdoll:GetOwner()
         local cureType = owner:getCurrentCure()
         if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") return end
-        owner:applyCureToVictim(cureType, tr.Entity)
+        local victim = tr.Entity.DeathRagdoll:GetOwner()
         tr.Entity.DeathRagdoll.IsDeath = false
+        local pos = victim:GetPos()
+        victim:Spawn()
+        victim:SetPos(pos)
+        victim:SetModel(AC_SCP49.config.zombieModel)
+        victim:StripWeapons()
+        victim:Give("weapon_scp_zombie")
+        tr.Entity.DeathRagdoll:Remove()
+        owner:applyCureToVictim(cureType, tr.Entity.DeathRagdoll:GetOwner())
         print(tr.Entity.DeathRagdoll)
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)
     elseif tr.Entity:IsValid() && !AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then
         tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
+    owner:LagCompensation( false )
 end
 
 function SWEP:SecondaryAttack()
@@ -136,7 +148,7 @@ function SWEP:Think()
         local tr = util.TraceHull(
             {
                 start = startpos,
-                endpos = startpos + owner:GetUp() * 192,
+                endpos = startpos + owner:GetUp(),
                 filter = owner,
                 mins = min,
                 max = max,

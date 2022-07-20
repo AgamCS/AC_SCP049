@@ -10,6 +10,7 @@ AC_SCP49.config.adminMenuCommands = {
 // Models that cannot be killed by
 AC_SCP49.config.immuneModels = {
     ["models/breen.mdl"] = true,
+    ["models/player/zombie_classic.mdl"] = true,
 }
 
 // Time in seconds it takes to mix a cure

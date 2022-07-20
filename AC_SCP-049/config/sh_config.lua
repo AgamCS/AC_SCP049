@@ -139,6 +139,9 @@ AC_SCP49.config.cureLimit = 1
 // The model used for 049-2 instances
 AC_SCP49.config.zombieModel = "models/player/zombie_classic.mdl"
 
+// Color used for the outline of 049-2 instances
+AC_SCP49.config.zombieOutlineColor = Color(255, 255, 0)
+
 // Ingredients for cures
 AC_SCP49.config.ingredients = {
     ["red"] = {

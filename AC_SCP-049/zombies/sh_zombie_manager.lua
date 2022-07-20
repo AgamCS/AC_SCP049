@@ -7,6 +7,9 @@ function AC_SCP49.zombie.Add(entity)
 end
 
 if CLIENT then
-    
+    local zombieOutline = AC_SCP49.config.zombieOutlineColor
+    hook.Add("PreDrawHalos", "AC_SCP049.drawZombieOutlines", function()
+
+    end)
 end
 

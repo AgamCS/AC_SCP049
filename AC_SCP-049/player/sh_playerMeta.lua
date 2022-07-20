@@ -61,6 +61,10 @@ function _P:setIs0492(state)
     AC_SCP49.zombie.Add(self)
 end
 
+function _P:isSCP049()
+    return self.isPlayerSCP049
+end
+
 function _P:applyCureToVictim(cureType, victim)
     if !SERVER then return end
     if !self.cures[cureType] || self.cures[cureType].amount < 1 then return end
@@ -130,6 +134,18 @@ if SERVER then
 
     end)
 
+    hook.Add("PlayerChangedTeam", "AC_SCP049.change049Status", function(ply, oldTeam, newTeam)
+        local oldTeamName, newTeamName = team.GetName(oldTeam), team.GetName(newTeam)
+        if oldTeamName == AC_SCP49.config.scp049Job then
+            ply.isPlayerSCP049 = false
+            return
+        end
+        if newTeamName == AC_SCP49.config.scp049Job then
+            ply.isPlayerSCP049 = true
+        end
+
+    end)
+
     net.Receive("ac_scp049.setupPlayer", function(len, ply)
         ply:setIs0492(false)
         ply:setIsMixing(false)
@@ -137,6 +153,7 @@ if SERVER then
         ply.cureCount = 0
         ply.currentCure = ""
         ply.equippedCure = nil
+        ply.isPlayerSCP049 = false
     end)
 
     net.Receive("ac_scp049.startMix", function(len, ply)

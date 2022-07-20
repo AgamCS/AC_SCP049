@@ -58,7 +58,11 @@ end
 function _P:setIs0492(state)
     if !SERVER then return end
     self.isPlayer0492 = tobool(state)
-    AC_SCP49.zombie.Add(self)
+    if state then
+        AC_SCP49.zombie.Add(self)
+    else
+        AC_SCP49.zombie.Remove(self)
+    end
 end
 
 function _P:isSCP049()

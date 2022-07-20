@@ -38,7 +38,6 @@ function _P:unequipCure()
 end
 
 function _P:getCurrentCure()
-    print(self.equippedCure)
     return self.equippedCure
 end
 
@@ -72,11 +71,11 @@ end
 function _P:applyCureToVictim(cureType, victim)
     if !SERVER then return end
     if !self.cures[cureType] || self.cures[cureType].amount < 1 then return end
-    cureType = AC_SCP49.getCure(cureType) 
-    if !cureType then return end
-    cureType.effect(victim)
-    print("Victim Info: \n" .. victim:Health() .. "\n" .. victim:GetMaxHealth() .. "\n" .. victim:GetMaxSpeed())
+    local cureTable = AC_SCP49.getCure(cureType) 
+    if !cureTable then return end
+    cureTable.effect(victim)
     victim:setIs0492(true)
+    PrintTable(self.cures[cureType])
     self.cures[cureType].amount = self.cures[cureType].amount - 1
     if self.cures[cureType].amount < 1 then
         self.cures[cureType] = nil
@@ -151,8 +150,8 @@ if SERVER then
     end)
 
     net.Receive("ac_scp049.setupPlayer", function(len, ply)
-        ply:setIs0492(false)
-        ply:setIsMixing(false)
+        ply.isPlayer0492 = false
+        ply.isPlayerMixing = false
         ply.cures = {}
         ply.cureCount = 0
         ply.currentCure = ""

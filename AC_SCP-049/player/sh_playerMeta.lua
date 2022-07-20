@@ -10,7 +10,6 @@ function _P:addCure(cureType)
     if self.cures[cure.class] then self.cures[cure.class].amount = self.cures[cure.class].amount + 1 return end
     self.cures[cure.class] = cure
     self.cures[cure.class].amount = 1
-    PrintTable(self.cures[cure.class])
 end
 
 function _P:getCures()
@@ -24,7 +23,6 @@ function _P:equipCure(cureType)
     
     if SERVER then
         self.equippedCure = cureType
-        print(self.equippedCure)
     end
 
     if CLIENT then
@@ -53,11 +51,14 @@ function _P:getCurrentCureName()
 end
 
 function _P:is0492()
+    if !SERVER then return end
     return self.isPlayer0492
 end
 
 function _P:setIs0492(state)
+    if !SERVER then return end
     self.isPlayer0492 = tobool(state)
+    AC_SCP49.zombie.Add(self)
 end
 
 function _P:applyCureToVictim(cureType, victim)
@@ -65,12 +66,9 @@ function _P:applyCureToVictim(cureType, victim)
     if !self.cures[cureType] || self.cures[cureType].amount < 1 then return end
     cureType = AC_SCP49.getCure(cureType) 
     if !cureType then return end
-    cureType.effect(self)
-    victim:SetModel(AC_SCP49.config.zombieModel)
-    victim:Spawn()
-    victim:SetPos(victim:GetPos())
-    print(victim)
-    //victim:setIs0492(true)
+    cureType.effect(victim)
+    print("Victim Info: \n" .. victim:Health() .. "\n" .. victim:GetMaxHealth() .. "\n" .. victim:GetMaxSpeed())
+    victim:setIs0492(true)
     self.cures[cureType].amount = self.cures[cureType].amount - 1
     if self.cures[cureType].amount < 1 then
         self.cures[cureType] = nil
@@ -121,6 +119,15 @@ if SERVER then
         if IsValid(victim) && victim:is0492() then
             victim:setIs0492(false)
         end
+    end)
+
+    hook.Add("PlayerUse", "AC_SCP049.PreventUse", function(ply, ent)
+        if (!IsValid(ent) || ent:GetClass() ~= "C_BaseEntity") then return end
+
+        if (ply:is0492()) then
+            return false
+        end
+
     end)
 
     net.Receive("ac_scp049.setupPlayer", function(len, ply)

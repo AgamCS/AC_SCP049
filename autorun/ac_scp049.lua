@@ -41,6 +41,8 @@ if SERVER then
     util.AddNetworkString("ac_scp049.requestCureList")
     util.AddNetworkString("ac_scp049.requestEquipCure")
     util.AddNetworkString("ac_scp049.requestRemoveCure")
+    util.AddNetworkString("ac_scp049.sendZombieAdd")
+    util.AddNetworkString("ac_scp049.sendZombieRemove")
 end
 
 if CLIENT then

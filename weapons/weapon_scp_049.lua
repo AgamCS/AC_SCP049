@@ -25,8 +25,7 @@ SWEP.Secondary.Automatic = false
 
 
 SWEP.Primary.AttackDelay = 0.3 // Delay before you are able to attempt to kill again
-SWEP.Primary.AttackRange = 40 // Range 
-SWEP.Primary.CureRange = 100
+SWEP.Primary.AttackRange = 70 // Range 
 
 // HUD COLORS
 local background = Color(50,50,50,200)
@@ -148,7 +147,7 @@ function SWEP:Think()
         local tr = util.TraceHull(
             {
                 start = startpos,
-                endpos = startpos + owner:GetUp(),
+                endpos = startpos + owner:GetUp() * 64,
                 filter = owner,
                 mins = min,
                 max = max,

@@ -24,8 +24,14 @@ SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
 SWEP.AutoSwtichTo = true
 
-SWEP.Primary.AttackDelay = 0.15
-SWEP.Primary.AttackRange = 65
+SWEP.nextSoundTime = 0
+SWEP.nextSoundDelay = 90
+
+// Delay between attacks
+SWEP.Primary.AttackDelay = 0.2
+
+// Range of curing and killing players with left click
+SWEP.Primary.AttackRange = 80
 
 // The minimum amount of hits needed to break down a door
 SWEP.Primary.minHits = 3
@@ -38,11 +44,13 @@ SWEP.Primary.minDamage = 15
 // Max damage the zombie can deal to a player
 SWEP.Primary.maxDamge = 28
 
+
+
 local phys_pushscale = GetConVar( "phys_pushscale" )
 local SwingSound = Sound( "WeaponFrag.Throw" )
 local HitSound = Sound( "Flesh.ImpactHard" )
 
-local soundList = {
+local doorSoundList = {
 	[1] = Sound("physics/metal/metal_barrel_impact_hard1.wav"),
 	[2] = Sound("physics/metal/metal_barrel_impact_hard2.wav"),
 	[3] = Sound("physics/metal/metal_barrel_impact_hard3.wav"),
@@ -129,7 +137,7 @@ function SWEP:DealDamage()
 		if tr.Entity.doorHits < 1 then
 			tr.Entity.doorHits = nil 
 			tr.Entity:Fire("Open")
-			tr.Entity:EmitSound(soundList[math.random(1, 6)], 100, 100, 1, CHAN_AUTO)
+			tr.Entity:EmitSound(doorSoundList[math.random(1, 6)], 100, 100, 1, CHAN_AUTO)
 			timer.Simple(AC_SCP49.config.autoCloseTime, function()
 				tr.Entity:Fire("Close")
 			end)
@@ -181,5 +189,42 @@ function SWEP:DealDamage()
 	end
 
 	self.Owner:LagCompensation( false )
+
+end
+
+function SWEP:Think()
+
+	local vm = self.Owner:GetViewModel()
+	local curtime = CurTime()
+	local idletime = self:GetNextIdle()
+
+	if ( idletime > 0 && CurTime() > idletime ) then
+
+		vm:SendViewModelMatchingSequence( vm:LookupSequence( "fists_idle_0" .. math.random( 1, 2 ) ) )
+
+		self:UpdateNextIdle()
+
+	end
+
+	local meleetime = self:GetNextMeleeAttack()
+
+	if ( meleetime > 0 && CurTime() > meleetime ) then
+
+		self:DealDamage()
+
+		self:SetNextMeleeAttack( 0 )
+
+	end
+
+	if ( SERVER && CurTime() > self:GetNextPrimaryFire() + 0.1 ) then
+
+		self:SetCombo( 0 )
+
+	end
+
+	if (SERVER && CurTime() > self.nextSoundTime) then
+		self:EmitSound("npc/zombie/zombie_voice_idle" .. math.random(1, 14) .. ".wav")
+		self.nextSoundTime = CurTime() + self.nextSoundDelay
+	end
 
 end

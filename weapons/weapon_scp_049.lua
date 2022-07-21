@@ -64,16 +64,9 @@ function SWEP:PrimaryAttack()
         if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") return end
         local victim = tr.Entity.DeathRagdoll:GetOwner()
         tr.Entity.DeathRagdoll.IsDeath = false
-        local pos = victim:GetPos()
-        victim:Spawn()
-        victim:SetPos(pos)
-        victim:SetModel(AC_SCP49.config.zombieModel)
-        victim:StripWeapons()
-        victim:Give("weapon_scp_zombie")
-        tr.Entity.DeathRagdoll:Remove()
-        owner:applyCureToVictim(cureType, tr.Entity.DeathRagdoll:GetOwner())
-        print(tr.Entity.DeathRagdoll)
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)
+        owner:applyCureToVictim(cureType, tr.Entity.DeathRagdoll:GetOwner())
+        
     elseif tr.Entity:IsValid() && !AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then
         tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end

@@ -9,12 +9,12 @@ AC_SCP49.config.adminMenuCommands = {
 
 // Models that cannot be killed by
 AC_SCP49.config.immuneModels = {
-    ["models/breen.mdl"] = true,
+    //["models/breen.mdl"] = true,
     ["models/player/zombie_classic.mdl"] = true,
 }
 
 // Time in seconds it takes to mix a cure
-AC_SCP49.config.mixTime = 8
+AC_SCP49.config.mixTime = 2
 
 // Sound settings
 AC_SCP49.config.soundMenu = {
@@ -141,6 +141,9 @@ AC_SCP49.config.zombieModel = "models/player/zombie_classic.mdl"
 
 // Color used for the outline of 049-2 instances
 AC_SCP49.config.zombieOutlineColor = Color(255, 255, 0)
+
+// Time before doors broken down by 049-2 auto close
+AC_SCP49.config.autoCloseTime = 35
 
 // Ingredients for cures
 AC_SCP49.config.ingredients = {

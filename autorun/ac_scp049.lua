@@ -43,6 +43,8 @@ if SERVER then
     util.AddNetworkString("ac_scp049.requestRemoveCure")
     util.AddNetworkString("ac_scp049.sendZombieAdd")
     util.AddNetworkString("ac_scp049.sendZombieRemove")
+    util.AddNetworkString("ac_scp049.playerBecame0492")
+    util.AddNetworkString("ac_scp049.playerBecameSCP049")
 end
 
 if CLIENT then

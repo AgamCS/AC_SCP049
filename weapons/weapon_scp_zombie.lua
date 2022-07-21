@@ -41,7 +41,16 @@ SWEP.Primary.maxDamge = 28
 local phys_pushscale = GetConVar( "phys_pushscale" )
 local SwingSound = Sound( "WeaponFrag.Throw" )
 local HitSound = Sound( "Flesh.ImpactHard" )
-local doorDestroySound = Sound("physics/metal/metal_barrel_impact_hard5.wav")
+
+local soundList = {
+	[1] = Sound("physics/metal/metal_barrel_impact_hard1.wav"),
+	[2] = Sound("physics/metal/metal_barrel_impact_hard2.wav"),
+	[3] = Sound("physics/metal/metal_barrel_impact_hard3.wav"),
+	[4] = Sound("physics/metal/metal_barrel_impact_hard5.wav"), // Sound 4 doesn't exist for some reason
+	[5] = Sound("physics/metal/metal_barrel_impact_hard6.wav"), 
+	[6] = Sound("physics/metal/metal_barrel_impact_hard7.wav"),
+
+}
 
 local doorClass = {
 	["func_door_rotating"] = true,
@@ -49,7 +58,7 @@ local doorClass = {
 	["func_door"] = true,
 }
 
-//print(doorDestroySound)
+
 
 function SWEP:Initalize()
     self:SetHoldType("fist")
@@ -120,7 +129,10 @@ function SWEP:DealDamage()
 		if tr.Entity.doorHits < 1 then
 			tr.Entity.doorHits = nil 
 			tr.Entity:Fire("Open")
-			tr.Entity:EmitSound(doorDestroySound, 100, 100, 1, CHAN_AUTO)
+			tr.Entity:EmitSound(soundList[math.random(1, 6)], 100, 100, 1, CHAN_AUTO)
+			timer.Simple(AC_SCP49.config.autoCloseTime, function()
+				tr.Entity:Fire("Close")
+			end)
 		end
 		hit = true
 

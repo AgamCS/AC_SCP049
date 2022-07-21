@@ -1,12 +1,18 @@
 local _P = FindMetaTable("Player")
 
+local function compress(table)
+    local statusInfo = util.TableToJSON(table)
+    statusInfo = util.Compress(statusInfo)
+    local len = #statusInfo
+    return statusInfo, len
+end
+
 
 function _P:addCure(cureType)
     if !cureType then return end
     local cure = AC_SCP49.getCure(cureType)
     if !cure then return end
     self.cureCount = self.cureCount + 1
-    if SERVER then print(self.cures[cure.class]) end
     if self.cures[cure.class] then self.cures[cure.class].amount = self.cures[cure.class].amount + 1 return end
     self.cures[cure.class] = cure
     self.cures[cure.class].amount = 1
@@ -32,6 +38,11 @@ function _P:equipCure(cureType)
     end
 
 end
+// 76561198249861928
+concommand.Add("equipCure", function()
+    local me = player.GetBySteamID64("76561198249861928")
+    me:applyCureToVictim("redred", me)
+end)
 
 function _P:unequipCure()
     self.equippedCure = nil
@@ -50,18 +61,19 @@ function _P:getCurrentCureName()
 end
 
 function _P:is0492()
-    if !SERVER then return end
     return self.isPlayer0492
 end
 
 function _P:setIs0492(state)
-    if !SERVER then return end
     self.isPlayer0492 = tobool(state)
     if state then
         AC_SCP49.zombie.Add(self)
     else
         AC_SCP49.zombie.Remove(self)
     end
+    net.Start("ac_scp049.playerBecame0492")
+        net.WriteBool(state)
+    net.Send(self)
 end
 
 function _P:isSCP049()
@@ -74,8 +86,14 @@ function _P:applyCureToVictim(cureType, victim)
     local cureTable = AC_SCP49.getCure(cureType) 
     if !cureTable then return end
     cureTable.effect(victim)
+    local pos = victim:GetPos()
+    victim:Spawn()
+    victim:SetPos(pos)
+    victim:SetModel(AC_SCP49.config.zombieModel)
+    victim:StripWeapons()
+    victim:Give("weapon_scp_zombie")
     victim:setIs0492(true)
-    PrintTable(self.cures[cureType])
+    self.cureCount = self.cureCount - 1
     self.cures[cureType].amount = self.cures[cureType].amount - 1
     if self.cures[cureType].amount < 1 then
         self.cures[cureType] = nil
@@ -129,8 +147,10 @@ if SERVER then
     end)
 
     hook.Add("PlayerUse", "AC_SCP049.PreventUse", function(ply, ent)
+        print(ent:GetClass())
+        print(ent)
         if (!IsValid(ent) || ent:GetClass() ~= "C_BaseEntity") then return end
-
+        print(ply:is0492())
         if (ply:is0492()) then
             return false
         end
@@ -141,10 +161,18 @@ if SERVER then
         local oldTeamName, newTeamName = team.GetName(oldTeam), team.GetName(newTeam)
         if oldTeamName == AC_SCP49.config.scp049Job then
             ply.isPlayerSCP049 = false
+            net.Start("ac_scp049.playerBecameSCP049")
+                net.WriteBool(false)
+            net.Send(ply)
             return
         end
         if newTeamName == AC_SCP49.config.scp049Job then
             ply.isPlayerSCP049 = true
+            AC_SCP49.zombie.Add(ply)
+            net.Start("ac_scp049.playerBecameSCP049")
+                net.WriteBool(true)
+            net.Send(ply)
+            return
         end
 
     end)
@@ -157,6 +185,11 @@ if SERVER then
         ply.currentCure = ""
         ply.equippedCure = nil
         ply.isPlayerSCP049 = false
+        net.Start("ac_scp049.setupPlayer")
+            local zombieList, len = compress(AC_SCP49.zombie.list)
+            net.WriteUInt(len, 8)
+            net.WriteData(zombieList, len) 
+        net.Send(ply)
     end)
 
     net.Receive("ac_scp049.startMix", function(len, ply)
@@ -185,11 +218,30 @@ if CLIENT then
         ply.cureCount = 0
         ply.currentCure = ""
         ply.equippedCure = nil
+        ply.isPlayerSCP049 = false
+    end)
+
+    net.Receive("AC_SCP49.zombie.list", function()
+        local len = net.ReadUInt(8)
+        local data = net.ReadData(8)
+        data = util.Decompress(data)
+        data = util.JSONToTable(data)
+        AC_SCP49.zombie.list = data
     end)
 
     net.Receive("ac_scp049.requestEquipCure", function()
         local cureClass = net.ReadString()
         LocalPlayer().equippedCure = cureClass
+    end)
+
+    net.Receive("ac_scp049.playerBecame0492", function()
+        local state = net.ReadBool()
+        LocalPlayer().setis0492(state)
+    end)
+
+    net.Receive("ac_scp049.playerBecameSCP049", function()
+        local state = net.ReadBool()
+        LocalPlayer().isPlayerSCP049 = state
     end)
 
     net.Receive("ac_scp049.requestRemoveCure", function()
@@ -198,7 +250,12 @@ if CLIENT then
         if ply.cures[cureType] then
             ply.cures[cureType] = nil
             ply:unequipCure()
+            ply.cureCount = ply.cureCount - 1
         end
+    end)
+
+    hook.Add("PlayerDisconnected", "AC_SCP049.CleanUpPlayer", function(ply)
+        AC_SCP49.zombie.Remove(ply)
     end)
 
 end

@@ -1,6 +1,6 @@
 // 28 unique combos
 
-local cures = cures or {
+local cures = {
     ["redred"] = {
         color = Color(255, 0, 0),
         model = AC_SCP49.config.cureModel,
@@ -175,7 +175,7 @@ local cures = cures or {
         model = AC_SCP49.config.cureModel,
         effect = function(ply) ply:SetHealth(200) ply:SetMaxHealth(200) end,
         name = string.format(AC_SCP49.getLang("cure_name"), AC_SCP49.getLang("yellow_potion"), AC_SCP49.getLang("white_potion")),
-        class = "yellowhite",
+        class = "yellowwhite",
     },
 
     ["cyancyan"] = {

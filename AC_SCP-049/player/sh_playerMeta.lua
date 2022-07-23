@@ -65,6 +65,7 @@ function _P:is0492()
 end
 
 function _P:setIs0492(state)
+    if !SERVER then return end
     self.isPlayer0492 = tobool(state)
     if state then
         AC_SCP49.zombie.Add(self)
@@ -146,17 +147,6 @@ if SERVER then
         end
     end)
 
-    hook.Add("PlayerUse", "AC_SCP049.PreventUse", function(ply, ent)
-        print(ent:GetClass())
-        print(ent)
-        if (!IsValid(ent) || ent:GetClass() ~= "C_BaseEntity") then return end
-        print(ply:is0492())
-        if (ply:is0492()) then
-            return false
-        end
-
-    end)
-
     hook.Add("PlayerChangedTeam", "AC_SCP049.change049Status", function(ply, oldTeam, newTeam)
         local oldTeamName, newTeamName = team.GetName(oldTeam), team.GetName(newTeam)
         if oldTeamName == AC_SCP49.config.scp049Job then
@@ -236,7 +226,7 @@ if CLIENT then
 
     net.Receive("ac_scp049.playerBecame0492", function()
         local state = net.ReadBool()
-        LocalPlayer().setis0492(state)
+        LocalPlayer().isPlayer0492 = state
     end)
 
     net.Receive("ac_scp049.playerBecameSCP049", function()

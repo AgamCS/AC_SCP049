@@ -25,7 +25,7 @@ SWEP.Secondary.Automatic = false
 SWEP.AutoSwtichTo = true
 
 SWEP.nextSoundTime = 0
-SWEP.nextSoundDelay = 90
+
 
 // Delay between attacks
 SWEP.Primary.AttackDelay = 0.2
@@ -49,6 +49,13 @@ SWEP.Primary.maxDamge = 28
 local phys_pushscale = GetConVar( "phys_pushscale" )
 local SwingSound = Sound( "WeaponFrag.Throw" )
 local HitSound = Sound( "Flesh.ImpactHard" )
+
+// Minimmum amount of time before the next zombie sound
+local nextSoundDelayMin = 60
+
+// Max amount of time before the next zombie sound
+local nextSoundDelayMax = 100
+
 
 local doorSoundList = {
 	[1] = Sound("physics/metal/metal_barrel_impact_hard1.wav"),
@@ -223,8 +230,8 @@ function SWEP:Think()
 	end
 
 	if (SERVER && CurTime() > self.nextSoundTime) then
-		self:EmitSound("npc/zombie/zombie_voice_idle" .. math.random(1, 14) .. ".wav")
-		self.nextSoundTime = CurTime() + self.nextSoundDelay
+		self.Owner:EmitSound("npc/zombie/zombie_voice_idle" .. math.random(1, 14) .. ".wav")
+		self.nextSoundTime = CurTime() + math.random(nextSoundDelayMin, nextSoundDelayMax)
 	end
 
 end

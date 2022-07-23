@@ -16,6 +16,19 @@ function AC_SCP49.zombie.Remove(entity)
     net.Broadcast()
 end
 
+
+if SERVER then
+
+    hook.Add("PlayerUse", "AC_SCP049.preventButtonUse", function(ply, ent)
+        if (!IsValid(ent) || ent:GetClass() ~= "func_button") then return end
+        print(ply:is0492())
+        if (ply:is0492()) then
+            return false
+        end
+
+    end)
+end
+
 if CLIENT then
     hook.Add("PreDrawHalos", "AC_SCP049.drawZombieOutlines", function()
         local ply = LocalPlayer()

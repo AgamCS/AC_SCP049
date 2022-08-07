@@ -1,13 +1,20 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// DO NOT EDIT ANYTHING HERE NOTHING WILL CHANGE //////////////
+/////////////////////////////// USE THE INGAME MENU TO MAKE CHANGES ///////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+
 if !AC_SCP49 then return end
 AC_SCP49.config = AC_SCP49.config or {}
 
 // Commands to open the admin menu
 AC_SCP49.config.adminMenuCommands = {
-    ["/cures"] = true,
-    ["!cures"] = true,
+    ["/scp049_config"] = true,
+    ["!scp049_config"] = true,
 }
 
-// Models that cannot be killed by
+// Models that cannot be killed by SCP 049
 AC_SCP49.config.immuneModels = {
     //["models/breen.mdl"] = true,
     ["models/player/zombie_classic.mdl"] = true,

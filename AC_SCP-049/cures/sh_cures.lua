@@ -1,6 +1,6 @@
 // 28 unique combos
 
-local cures = {
+AC_SCP49.cures = {
     ["redred"] = {
         color = Color(255, 0, 0),
         model = AC_SCP49.config.cureModel,
@@ -229,18 +229,14 @@ local cures = {
 }
 
 function AC_SCP49.getCure(combo)
-    if !combo || !cures[combo] then return end
-    return cures[combo]
+    if !combo || !AC_SCP49.cures[combo] then return end
+    return AC_SCP49.cures[combo]
 end
 
 function AC_SCP49.startCureMix(ply, cureType)
     if !cureType || !cures[cureType] then return end
-    local cure = cures[cureType]
+    local cure = AC_SCP49.cures[cureType]
     if SERVER && !IsValid(ply) then return end
-    if SERVER then
-        
-    end 
-
 end
 
 if SERVER then

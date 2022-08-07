@@ -26,8 +26,9 @@ end
 
 addDir("AC_SCP-049/libs/outline/")
 addDir("AC_SCP-049/lang/")
-addDir("AC_SCP-049/config/")
 addDir("AC_SCP-049/loaders/")
+addDir("AC_SCP-049/config/")
+addDir("AC_SCP-049/dataSaving/")
 addDir("AC_SCP-049/cures/")
 addDir("AC_SCP-049/net/")
 addDir("AC_SCP-049/vgui/")

@@ -50,8 +50,14 @@ AC_SCP49.lang = {
 
     // Weapon HUD
     ["swep_hud_text"] = "[%s] Open cure mixer",
-    ["swep_current_text"] = "Equipped Cure: %s"
+    ["swep_current_text"] = "Equipped Cure: %s",
 
+    // Admin Menu
+    ["frame_title"] = "SCP-049 Admin Menu",
+    ["scp_settings_name"] = "SCP Settings",
+    ["scp_settings_desc"] = "Change settings of SCP-049 and 049-2",
+    ["cure_settings_name"] = "Cure Settings",
+    ["cure_settings_desc"] = "Change settings of cures",
     
 }
 

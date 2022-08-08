@@ -1,17 +1,10 @@
 local dataDir = "ac_scp049"
 local configDir = dataDir .. "/config.txt"
-local cureDir = dataDir .. "/cures.txt"
 
 local function loadConfig()
     local contents = file.Read(configDir)
     contents = util.JSONToTable(contents)
     AC_SCP49.config = contents
-end
-
-local function loadCures()
-    local contents = file.Read(cureDir)
-    contents = util.JSONToTable(contents)
-    AC_SCP49.cures = contents
 end
 
 if SERVER then
@@ -26,10 +19,31 @@ if SERVER then
         file.Write(configDir, config)
     end
 
-    if (file.Exists(cureDir, "DATA")) then
-        loadCures()
-    else
-        local cures = util.TableToJSON(AC_SCP49.cures, true)
-        file.Write(cureDir, cures)
-    end
+    net.Receive("ac_scp049.loadClientConfig", function(len, ply)
+        local config = util.TableToJSON(AC_SCP49.config)
+        config = util.Compress(config)
+        net.Start("ac_scp049.loadClientConfig")
+            net.WriteUInt(#config, 16)
+            net.WriteData(config, #config)
+        net.Send(ply)
+    end)
+
+
+end
+
+
+if CLIENT then
+    hook.Add("InitPostEntity", "loadClientConfig", function()
+        net.Start("ac_scp049.loadClientConfig")
+        net.SendToServer()
+    end)
+
+    net.Receive("ac_scp049.loadClientConfig", function()
+        local len = net.ReadUInt(16)
+        local config = net.ReadData(len)
+        config = util.Decompress(config)
+        AC_SCP49.config = util.JSONToTable(config)
+        hook.Run("AC_SCP049.ClientConfigUpdated")
+    end)
+
 end

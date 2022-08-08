@@ -145,7 +145,7 @@ function SWEP:DealDamage()
 			tr.Entity.doorHits = nil 
 			tr.Entity:Fire("Open")
 			tr.Entity:EmitSound(doorSoundList[math.random(1, 6)], 100, 100, 1, CHAN_AUTO)
-			timer.Simple(AC_SCP49.config.autoCloseTime, function()
+			timer.Simple(AC_SCP49.config["autoCloseTime"], function()
 				tr.Entity:Fire("Close")
 			end)
 		end

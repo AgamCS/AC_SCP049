@@ -33,6 +33,9 @@ local outline = Color(255,255,255,50)
 local edges = Color(255,255,255,120)
 local progress = Color(150, 150, 150)
 
+// DEBUG
+local DEBUG = true
+
 function SWEP:Initalize()
     self:SetHoldType("normal")
 end
@@ -67,7 +70,7 @@ function SWEP:PrimaryAttack()
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)
         owner:applyCureToVictim(cureType, tr.Entity.DeathRagdoll:GetOwner())
         
-    elseif tr.Entity:IsValid() && !AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then
+    elseif tr.Entity:IsValid() && !AC_SCP49.config["immuneModels"][tr.Entity:GetModel()] then
         tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
     owner:LagCompensation( false )
@@ -107,10 +110,10 @@ if CLIENT then
         draw.SimpleText(string.format(AC_SCP49.getLang("swep_current_text"), owner:getCurrentCureName() or AC_SCP49.getLang("none")), "AC_SCP049.FontScale12", scrw * 0.175, scrh * 0.915, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if !owner:isMixing() then return end
         if AC_SCP49.testPanel && AC_SCP49.testPanel:IsVisible() then return end
-        local time = AC_SCP49.mixStartTime  + AC_SCP49.config.mixTime - AC_SCP49.mixStartTime 
+        local time = AC_SCP49.mixStartTime  + AC_SCP49.config["mixTime"] - AC_SCP49.mixStartTime 
         local curtime = CurTime() - AC_SCP49.mixStartTime 
         local timeleft = math.Round(timer.TimeLeft(owner:SteamID64() .. " ac_scp049.mixingTimer"), 1) 
-        local endtime = AC_SCP49.config.mixTime - timeleft
+        local endtime = AC_SCP49.config["mixTime"] - timeleft
         
         local x, y, width, height = scrw * 0.5 - scrw * 0.15, scrh * 0.8 - scrh * 0.05, scrw * 0.3, scrh * 0.07
         local status = math.Clamp(curtime / time, 0, 1)
@@ -148,7 +151,7 @@ function SWEP:Think()
             }) 
             
             if !tr.Entity:IsValid() then return end
-            if AC_SCP49.config.immuneModels[tr.Entity:GetModel()] then return end 
+            if AC_SCP49.config["immuneModels"][tr.Entity:GetModel()] then return end 
             tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
 
@@ -168,6 +171,7 @@ function SWEP:Think()
 end
 
 if CLIENT then
+    if !DEBUG then return end
     hook.Add("HUDPaint", "AC_SCP49_DEBUG", function()
         local scrw, scrh = ScrW(), ScrH()
         local yspace = scrh * 0.4

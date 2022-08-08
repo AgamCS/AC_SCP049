@@ -90,7 +90,7 @@ function _P:applyCureToVictim(cureType, victim)
     local pos = victim:GetPos()
     victim:Spawn()
     victim:SetPos(pos)
-    victim:SetModel(AC_SCP49.config.zombieModel)
+    victim:SetModel(AC_SCP49.config["zombieModel"])
     victim:StripWeapons()
     victim:Give("weapon_scp_zombie")
     victim:setIs0492(true)
@@ -113,7 +113,7 @@ end
 function _P:setIsMixing(cureType, state)
     if (!cureType || !AC_SCP49.getCure(cureType)) && state == true then return end
     state = tobool(state)
-    if state == true && self.cureCount >= AC_SCP49.config.cureLimit then DarkRP.notify(self, 1, 5, AC_SCP49.getLang("cure_limit")) return end
+    if state == true && self.cureCount >= AC_SCP49.config["cureLimit"] then DarkRP.notify(self, 1, 5, AC_SCP49.getLang("cure_limit")) return end
     if CLIENT then
         self.isPlayerMixing = state
         net.Start("ac_scp049.startMix")
@@ -123,7 +123,7 @@ function _P:setIsMixing(cureType, state)
             end
         net.SendToServer()
         if state == false then return end
-        timer.Create(self:SteamID64() .. " ac_scp049.mixingTimer", AC_SCP49.config.mixTime, 1, function()
+        timer.Create(self:SteamID64() .. " ac_scp049.mixingTimer", AC_SCP49.config["mixTime"], 1, function()
             self:setIsMixing(false)
             self:addCure(cureType)
         end)
@@ -131,7 +131,7 @@ function _P:setIsMixing(cureType, state)
     if SERVER then
         self.isPlayerMixing = state
         if state == false then return end
-        timer.Create(self:SteamID64() .. " ac_scp049.mixingTimer", AC_SCP49.config.mixTime, 1, function()
+        timer.Create(self:SteamID64() .. " ac_scp049.mixingTimer", AC_SCP49.config["mixTime"], 1, function()
             self:setIsMixing(false)
             self:addCure(cureType)
             DarkRP.notify(self, 2, 5, AC_SCP49.getLang("done_mixing"))
@@ -149,14 +149,14 @@ if SERVER then
 
     hook.Add("PlayerChangedTeam", "AC_SCP049.change049Status", function(ply, oldTeam, newTeam)
         local oldTeamName, newTeamName = team.GetName(oldTeam), team.GetName(newTeam)
-        if oldTeamName == AC_SCP49.config.scp049Job then
+        if oldTeamName == AC_SCP49.config["scp049Job"] then
             ply.isPlayerSCP049 = false
             net.Start("ac_scp049.playerBecameSCP049")
                 net.WriteBool(false)
             net.Send(ply)
             return
         end
-        if newTeamName == AC_SCP49.config.scp049Job then
+        if newTeamName == AC_SCP49.config["scp049Job"] then
             ply.isPlayerSCP049 = true
             AC_SCP49.zombie.Add(ply)
             net.Start("ac_scp049.playerBecameSCP049")

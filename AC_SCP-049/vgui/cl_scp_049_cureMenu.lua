@@ -32,18 +32,18 @@ function PANEL:cureMenuLayout()
     local ingW, ingH = pW * 0.2, pH * 0.4
     self.ingredient1:SetSize(ingW, ingH)
     self.ingredient1:SetPos((pW * 0.01) + (ingW/2), (ingH/2))
-    self.ingredient1:SetModel(AC_SCP49.config.ingredientModel)
+    self.ingredient1:SetModel(AC_SCP49.config["ingredientModel"])
 
     
     self.ingredient2 = vgui.Create("scp_049_ingredientPanel", self)
     self.ingredient2:SetSize(ingW, ingH)
     self.ingredient2:SetPos((pW * 0.3) + (ingW/2), (ingH/2))
-    self.ingredient2:SetModel(AC_SCP49.config.ingredientModel)
+    self.ingredient2:SetModel(AC_SCP49.config["ingredientModel"])
 
     self.cure = vgui.Create("scp_049_ingredientPanel", self)
     self.cure:SetSize(ingW, ingH)
     self.cure:SetPos((pW * 0.6) + (ingW/2), (ingH/2))
-    self.cure:SetModel(AC_SCP49.config.cureModel)
+    self.cure:SetModel(AC_SCP49.config["cureModel"])
     self.cure:SetPanelAsCure(self.ingredient1, self.ingredient2)
 
     self.ingredient1:SetPanelAsIngredient(self.cure)
@@ -71,13 +71,13 @@ function PANEL:cureMenuLayout()
             surface.DrawRect(0, 0, w, h)
             surface.SetDrawColor(potionOutline)
             surface.DrawOutlinedRect(0, 0, w, h, 4)
-            draw.SimpleText(AC_SCP49.config.ingredients[v].name, "AC_SCP049.Font", w * 0.5, 0 + h * 0.11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(AC_SCP49.config["ingredients"][v].name, "AC_SCP049.Font", w * 0.5, 0 + h * 0.11, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         local potion = vgui.Create("DModelPanel", modelPanel)
         potion.name = v
         potion:StretchToParent(0, 0, 0, 0)
-        potion:SetModel(AC_SCP49.config.ingredients[v].model)
-        potion:SetColor(AC_SCP49.config.ingredients[v].color)
+        potion:SetModel(AC_SCP49.config["ingredients"][v].model)
+        potion:SetColor(AC_SCP49.config["ingredients"][v].color)
         local ent = potion:GetEntity()
         ent:SetModelScale(3)
         ent:SetPos(ent:GetPos() + Vector(0, 0, 25))
@@ -147,10 +147,10 @@ function PANEL:cureMenuLayout()
     mixProgress.Paint = function(s, w, h)
         local ply = LocalPlayer()
         if !ply:isMixing() then return end
-        local time = AC_SCP49.mixStartTime + AC_SCP49.config.mixTime - AC_SCP49.mixStartTime
+        local time = AC_SCP49.mixStartTime + AC_SCP49.config["mixTime"] - AC_SCP49.mixStartTime
         local curTime = CurTime() - AC_SCP49.mixStartTime
         local timeleft = math.Round(timer.TimeLeft(ply:SteamID64() .. " ac_scp049.mixingTimer"), 1) 
-        local endtime = AC_SCP49.config.mixTime - timeleft
+        local endtime = AC_SCP49.config["mixTime"] - timeleft
         local status = math.Clamp(curTime / time, 0, 1)
         local barWidth = status * w - 16
         surface.SetDrawColor(progress)

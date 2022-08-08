@@ -9,22 +9,29 @@ if !AC_SCP49 then return end
 AC_SCP49.config = AC_SCP49.config or {}
 
 // Commands to open the admin menu
-AC_SCP49.config.adminMenuCommands = {
+AC_SCP49.config["adminMenuCommands"] = {
     ["/scp049_config"] = true,
     ["!scp049_config"] = true,
 }
 
 // Models that cannot be killed by SCP 049
-AC_SCP49.config.immuneModels = {
+AC_SCP49.config["immuneModels"] = {
     //["models/breen.mdl"] = true,
     ["models/player/zombie_classic.mdl"] = true,
 }
 
 // Time in seconds it takes to mix a cure
-AC_SCP49.config.mixTime = 2
+AC_SCP49.config["mixTime"] = 2
+
+// Admin ranks
+AC_SCP49.config["adminRanks"] = {
+    ["superadmin"] = true,
+    ["admin"] = true,
+}
+
 
 // Sound settings
-AC_SCP49.config.soundMenu = {
+AC_SCP49.config["soundMenu"] = {
     [1] = {
         text = AC_SCP49.getLang("soundMenu.company"),
         soundFile = "049/DetectedInChamber.wav",
@@ -129,31 +136,31 @@ AC_SCP49.config.soundMenu = {
 }
 
 // Volume of SCP-049 voice lines
-AC_SCP49.config.soundLevel = 100
+AC_SCP49.config["soundLevel"] = 100
 
 // Ingredient Model
-AC_SCP49.config.ingredientModel = "models/scp049/flask/flask.mdl"
+AC_SCP49.config["ingredientModel"] = "models/scp049/flask/flask.mdl"
 
 // Cure Model 
-AC_SCP49.config.cureModel = "models/scp049/graduatedcylinder/cylinder.mdl"
+AC_SCP49.config["cureModel"] = "models/scp049/graduatedcylinder/cylinder.mdl"
 
 // The name of the SCP 049 job
-AC_SCP49.config.scp049Job = "SCP 049"
+AC_SCP49.config["scp049Job"] = "SCP 049"
 
 // Max number of cures the player can carry
-AC_SCP49.config.cureLimit = 1
+AC_SCP49.config["cureLimit"] = 1
 
 // The model used for 049-2 instances
-AC_SCP49.config.zombieModel = "models/player/zombie_classic.mdl"
+AC_SCP49.config["zombieModel"] = "models/player/zombie_classic.mdl"
 
 // Color used for the outline of 049-2 instances
-AC_SCP49.config.zombieOutlineColor = Color(255, 255, 0)
+AC_SCP49.config["zombieOutlineColor"] = Color(255, 255, 0)
 
 // Time before doors broken down by 049-2 auto close
-AC_SCP49.config.autoCloseTime = 35
+AC_SCP49.config["autoCloseTime"] = 35
 
 // Ingredients for cures
-AC_SCP49.config.ingredients = {
+AC_SCP49.config["ingredients"] = {
     ["red"] = {
         color = Color(255, 0, 0),
         model = AC_SCP49.config.ingredientModel,
@@ -210,6 +217,13 @@ end
 
 // Font settings
 if CLIENT then
+
+    surface.CreateFont("AC_SCP049.FontSmall", {
+        font = "Roboto",
+        weight = 10,
+        size = ScreenScale(4),
+    })
+
     surface.CreateFont("AC_SCP049.Font", {
         font = "Roboto",
         weight = 10,

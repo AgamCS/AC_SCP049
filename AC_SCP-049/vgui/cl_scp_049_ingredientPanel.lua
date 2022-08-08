@@ -33,9 +33,9 @@ function PANEL:SetPanelAsIngredient(curePanel)
 end
 
 function PANEL:SetIngredient(name)
-    if !AC_SCP49.config.ingredients[name] then error("Could not find ingredient in list") end
+    if !AC_SCP49.config["ingredients"][name] then error("Could not find ingredient in list") end
     self.__ingredient = name
-    self.modelPanel:SetColor(AC_SCP49.config.ingredients[name].color)
+    self.modelPanel:SetColor(AC_SCP49.config["ingredients"][name].color)
 end
 
 function PANEL:RemoveIngredient()

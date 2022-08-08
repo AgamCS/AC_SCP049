@@ -35,7 +35,7 @@ if CLIENT then
         
         if (ply:isSCP049() || ply:is0492()) then 
             if table.IsEmpty(AC_SCP49.zombie.list) then return end
-            outline.Add(AC_SCP49.zombie.list, AC_SCP49.config.zombieOutlineColor, OUTLINE_MODE_BOTH)
+            outline.Add(AC_SCP49.zombie.list, AC_SCP49.config["zombieOutlineColor"], OUTLINE_MODE_BOTH)
             //outline.SetRenderType(OUTLINE_RENDERTYPE_BEFORE_VM)
         end
     end)

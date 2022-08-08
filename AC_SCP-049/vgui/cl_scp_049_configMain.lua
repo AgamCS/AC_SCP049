@@ -13,9 +13,9 @@ local settings = {
     },
 
     [2] = {
-        name = AC_SCP49.getLang("cure_settings_name"),
-        desc = AC_SCP49.getLang("cure_settings_desc"),
-        newScene = "scp_049_configCures",
+        name = AC_SCP49.getLang("general_settings_name"),
+        desc = AC_SCP49.getLang("general_settings_desc"),
+        newScene = "scp_049_configGeneral",
     }
 }
 
@@ -62,7 +62,13 @@ function PANEL:CreateSettings(pWidth, pHeight)
         end
 
         sButton.DoClick = function()
+            self.panel:Remove()
             self.panel = vgui.Create(v.newScene, self)
+            self.panel:Dock(FILL)
+            self.panel:CreateSettings(self:GetWide(), self:GetTall())
+            self:SetTitle(v.name)
+            self.panel.Paint = function(s, w, h)
+            end
         end
 
         local sText = vgui.Create("DLabel", sPanel)
@@ -92,6 +98,3 @@ end
 
 vgui.Register("scp_049_configMain", PANEL, "DFrame")
 
-concommand.Add("test_adminMain", function()
-    local testPanel = vgui.Create("scp_049_configMain")
-end)

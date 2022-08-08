@@ -26,14 +26,15 @@ end
 
 addDir("AC_SCP-049/libs/outline/")
 addDir("AC_SCP-049/lang/")
-addDir("AC_SCP-049/loaders/")
 addDir("AC_SCP-049/config/")
+addDir("AC_SCP-049/loaders/")
 addDir("AC_SCP-049/dataSaving/")
 addDir("AC_SCP-049/cures/")
 addDir("AC_SCP-049/net/")
 addDir("AC_SCP-049/vgui/")
 addDir("AC_SCP-049/zombies/")
 addDir("AC_SCP-049/player/")
+addDir("AC_SCP-049/commands/")
 
 if SERVER then
     util.AddNetworkString("ac_scp049.playSound")
@@ -46,6 +47,11 @@ if SERVER then
     util.AddNetworkString("ac_scp049.sendZombieRemove")
     util.AddNetworkString("ac_scp049.playerBecame0492")
     util.AddNetworkString("ac_scp049.playerBecameSCP049")
+    util.AddNetworkString("ac_scp049.loadClientConfig")
+    util.AddNetworkString("ac_scp049.verifyConfigChanges")
+    util.AddNetworkString("ac_scp049.sendConfigToClients")
+    util.AddNetworkString("ac_scp049.checkRank")
+
 end
 
 if CLIENT then

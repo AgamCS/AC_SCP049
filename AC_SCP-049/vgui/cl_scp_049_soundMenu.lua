@@ -38,7 +38,7 @@ function PANEL:createSounds()
     end
 
     local w, h = self.soundScroll:GetWide(), self.soundScroll:GetTall()
-    for k, v in ipairs(AC_SCP49.config.soundMenu) do
+    for k, v in ipairs(AC_SCP49.config["soundMenu"]) do
         local btn = vgui.Create("DButton", self.soundScroll)
         btn:SetSize(w * 0.1, h * 0.1)
         btn:Dock(TOP)

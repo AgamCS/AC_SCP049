@@ -54,11 +54,6 @@ function _P:equipCure(cureType)
     end
 
 end
-// 76561198249861928
-concommand.Add("equipCure", function()
-    local me = player.GetBySteamID64("76561198249861928")
-    me:applyCureToVictim("redred", me)
-end)
 
 function _P:unequipCure()
     self.equippedCure = nil
@@ -149,6 +144,7 @@ function _P:setIsMixing(cureType, state)
         end)
     end
     if SERVER then
+        if !IsValid(self) then return end
         self.isPlayerMixing = state
         if state == false then return end
         timer.Create(self:SteamID64() .. " ac_scp049.mixingTimer", AC_SCP49.config["mixTime"], 1, function()
@@ -161,12 +157,14 @@ function _P:setIsMixing(cureType, state)
 end
 
 if SERVER then
-    hook.Add("PlayerDeath", "AC_SCP049.ResetIs0492", function(victim)
-        if IsValid(victim) && victim:is0492() then
-            //victim:SetKnocked(false)
-            victim:setIs0492(false)
-            victim:SetModel(victim.scp0492oldModel)
-            victim:Spawn()
+
+    hook.Add("EntityTakeDamage", "AC_SCP049.ResetIs0492", function(ent, dmg) 
+        if !ent:IsPlayer() || !IsValid(ent) then return end
+        if ent:is0492() && ent:IsKnocked() then
+            ent:SetKnocked(false)
+            ent:setIs0492(false)
+            ent:SetModel(ent.scp0492oldModel)
+            ent:Spawn()
         end
     end)
 
@@ -274,11 +272,16 @@ if CLIENT then
 
     net.Receive("ac_scp049.sendReviveCam", function()
         local duration = net.ReadUInt(4)
-        
+        local timeToFullZoom = 4 / duration
+        local zoomStart = CurTime()
+        local zoomEnd = zoomStart + timeToFullZoom
+  
         hook.Add("CalcView", "AC_SCP049.ReviveCam", function(ply, origin, angles, fov)
+            local startPos = origin + Vector(50, 0, 0)
+            local pos = Lerp(CurTime() - zoomEnd, startPos, origin - ( angles:Forward() * 100 ))
             local view = {
-                origin = origin - ( angles:Forward() * 100 ),
-                angles = -ply:EyeAngles(),
+                origin = pos,
+                angles = angles,
                 fov = fov,
                 drawviewer = true
             }

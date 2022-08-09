@@ -195,14 +195,34 @@ function PANEL:CreateSettings(pWidth, pHeight)
         applyChanges()
     end
 
-end
+    local backButton = vgui.Create("DButton", self)
+    backButton:SetSize(pWidth * 0.1, pHeight * 0.05)
+    backButton:DockMargin(pWidth * 0.8, pHeight * 0.01, pWidth * 0.06, pHeight * 0.01)
+    backButton:Dock(BOTTOM)
+    backButton:SetText("")
+    backButton.Paint = function(s, w, h)
+        draw.RoundedBox(4, 0, 0, w, h, sPanelBackground)
+        local backText = AC_SCP49.getLang("settings_back")
+        if !s:IsHovered() then
+            draw.SimpleText(backText, "AC_SCP049.Font", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        else
+            draw.SimpleText(backText, "AC_SCP049.Font", w * 0.5, h * 0.5, hoverColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end
 
-function PANEL:OnScreenSizeChanged()
-    self:InvalidateLayout()
+    backButton.DoClick = function(s)
+        local parent = self:GetParent()
+        parent:SwitchScene("scp_049_configHome", AC_SCP49.getLang("frame_title"))
+    end
+
 end
 
 function PANEL:OnSizeChanged()
     self:InvalidateLayout()
+end
+
+function PANEL:Paint()
+
 end
 
 vgui.Register("scp_049_configSCP", PANEL, "DPanel")

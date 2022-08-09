@@ -20,18 +20,6 @@ local function addDir(path)
         end
 end
 
-addDir("AC_SCP-049/libs/outline/")
-addDir("AC_SCP-049/lang/")
-addDir("AC_SCP-049/config/")
-addDir("AC_SCP-049/loaders/")
-addDir("AC_SCP-049/dataSaving/")
-addDir("AC_SCP-049/cures/")
-addDir("AC_SCP-049/net/")
-addDir("AC_SCP-049/vgui/")
-addDir("AC_SCP-049/zombies/")
-addDir("AC_SCP-049/player/")
-addDir("AC_SCP-049/commands/")
-
 if SERVER then
     util.AddNetworkString("ac_scp049.playSound")
     util.AddNetworkString("ac_scp049.setupPlayer")
@@ -50,6 +38,20 @@ if SERVER then
     util.AddNetworkString("ac_scp049.sendReviveCam")
 
 end
+
+addDir("AC_SCP-049/libs/outline/")
+addDir("AC_SCP-049/lang/")
+addDir("AC_SCP-049/config/")
+addDir("AC_SCP-049/loaders/")
+addDir("AC_SCP-049/dataSaving/")
+addDir("AC_SCP-049/cures/")
+addDir("AC_SCP-049/net/")
+addDir("AC_SCP-049/vgui/")
+addDir("AC_SCP-049/zombies/")
+addDir("AC_SCP-049/player/")
+addDir("AC_SCP-049/commands/")
+
+
 
 MsgC(Color(0, 255, 0), "[SCP 049]: All files loaded")
 

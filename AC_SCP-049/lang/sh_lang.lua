@@ -59,6 +59,8 @@ AC_SCP49.lang = {
     ["general_settings_name"] = "General Settings",
     ["general_settings_desc"] = "Change settings such as commands, admin ranks, etc.",
     ["settings_apply"] = "Apply",
+    ["settings_back"] = "Back",
+
 
     // SCP Admin Menu
     ["scp_immuneModels_name"] = "Immune Models",

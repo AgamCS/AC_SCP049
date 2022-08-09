@@ -42,7 +42,7 @@ SWEP.Primary.maxHits = 5
 // Minimum damage the zombie can deal to a player
 SWEP.Primary.minDamage = 15
 // Max damage the zombie can deal to a player
-SWEP.Primary.maxDamge = 28
+SWEP.Primary.maxDamage = 28
 
 
 
@@ -151,7 +151,7 @@ function SWEP:DealDamage()
 		end
 		hit = true
 
-	elseif ( SERVER && IsValid( tr.Entity ) && ( tr.Entity:IsNPC() || tr.Entity:IsPlayer() || tr.Entity:Health() > 0 ) ) then
+	elseif ( SERVER && IsValid( tr.Entity ) && ( tr.Entity:IsNPC() || tr.Entity:IsPlayer() || tr.Entity:Health() > 0 ) && team.GetName(self.Owner:Team())) != AC_SCP49.config["scp049Job"] then
 		local dmginfo = DamageInfo()
 
 		local attacker = self.Owner
@@ -159,7 +159,7 @@ function SWEP:DealDamage()
 		dmginfo:SetAttacker( attacker )
 
 		dmginfo:SetInflictor( self )
-		dmginfo:SetDamage( math.random( 8, 12 ) )
+		dmginfo:SetDamage( math.random( self.Primary.minDamage , self.Primary.maxDamage  ) )
 
 		if ( anim == "fists_left" ) then
 			dmginfo:SetDamageForce( self.Owner:GetRight() * 4912 * scale + self.Owner:GetForward() * 9998 * scale ) -- Yes we need those specific numbers
@@ -167,7 +167,6 @@ function SWEP:DealDamage()
 			dmginfo:SetDamageForce( self.Owner:GetRight() * -4912 * scale + self.Owner:GetForward() * 9989 * scale )
 		elseif ( anim == "fists_uppercut" ) then
 			dmginfo:SetDamageForce( self.Owner:GetUp() * 5158 * scale + self.Owner:GetForward() * 10012 * scale )
-			dmginfo:SetDamage( math.random( SWEP.Primary.minDamage , SWEP.Primary.maxDamage  ) )
 		end
 
 		SuppressHostEvents( NULL ) -- Let the breakable gibs spawn in multiplayer on client

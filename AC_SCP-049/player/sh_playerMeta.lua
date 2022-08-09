@@ -1,10 +1,26 @@
 local _P = FindMetaTable("Player")
+local reviveSound = Sound("npc/zombie/zombie_alert1.wav")
+
 
 local function compress(table)
     local statusInfo = util.TableToJSON(table)
     statusInfo = util.Compress(statusInfo)
     local len = #statusInfo
     return statusInfo, len
+end
+
+local function runScriptedSequence(ply)
+    ply:Lock()
+    local anim = ply:SelectWeightedSequence(ACT_HL2MP_ZOMBIE_SLUMP_RISE)
+    local seqDuration = ply:SequenceDuration(anim)
+    ply:DoAnimationEvent( ACT_HL2MP_ZOMBIE_SLUMP_RISE )
+    ply:EmitSound(reviveSound)
+    net.Start("ac_scp049.sendReviveCam")
+        net.WriteUInt(seqDuration, 4)
+    net.Send(ply)
+    timer.Simple(seqDuration, function()
+        ply:UnLock()
+    end)
 end
 
 
@@ -90,19 +106,23 @@ function _P:applyCureToVictim(cureType, victim)
     local pos = victim:GetPos()
     victim:Spawn()
     victim:SetPos(pos)
+    victim.scp0492oldModel = victim:GetModel()
     victim:SetModel(AC_SCP49.config["zombieModel"])
     victim:StripWeapons()
-    victim:Give("weapon_scp_zombie")
-    victim:setIs0492(true)
-    self.cureCount = self.cureCount - 1
-    self.cures[cureType].amount = self.cures[cureType].amount - 1
-    if self.cures[cureType].amount < 1 then
-        self.cures[cureType] = nil
-        self:unequipCure()
-        net.Start("ac_scp049.requestRemoveCure")
-            net.WriteString(cureType)
-        net.Send(self)
-    end
+    timer.Simple(0, function()
+        victim:Give("weapon_scp_zombie")
+        victim:setIs0492(true)
+        runScriptedSequence(victim)
+        self.cureCount = self.cureCount - 1
+        self.cures[cureType].amount = self.cures[cureType].amount - 1
+        if self.cures[cureType].amount < 1 then
+            self.cures[cureType] = nil
+            self:unequipCure()
+            net.Start("ac_scp049.requestRemoveCure")
+                net.WriteString(cureType)
+            net.Send(self)
+        end
+    end)
 end
 
 
@@ -141,9 +161,12 @@ function _P:setIsMixing(cureType, state)
 end
 
 if SERVER then
-    hook.Add("PlayerDeath", "AC_SCP049.ResetIs0492", function(victim, inflictor, attacker)
+    hook.Add("PlayerDeath", "AC_SCP049.ResetIs0492", function(victim)
         if IsValid(victim) && victim:is0492() then
+            //victim:SetKnocked(false)
             victim:setIs0492(false)
+            victim:SetModel(victim.scp0492oldModel)
+            victim:Spawn()
         end
     end)
 
@@ -200,6 +223,9 @@ if SERVER then
 end
 
 if CLIENT then
+
+    
+
     hook.Add("InitPostEntity", "AC_SCP049.SetupPlayer", function()
         local ply = LocalPlayer()
         net.Start("ac_scp049.setupPlayer")
@@ -242,6 +268,27 @@ if CLIENT then
             ply:unequipCure()
             ply.cureCount = ply.cureCount - 1
         end
+    end)
+
+    
+
+    net.Receive("ac_scp049.sendReviveCam", function()
+        local duration = net.ReadUInt(4)
+        
+        hook.Add("CalcView", "AC_SCP049.ReviveCam", function(ply, origin, angles, fov)
+            local view = {
+                origin = origin - ( angles:Forward() * 100 ),
+                angles = -ply:EyeAngles(),
+                fov = fov,
+                drawviewer = true
+            }
+            return view
+        end)
+
+        timer.Simple(duration, function()
+            hook.Remove("CalcView", "AC_SCP049.ReviveCam")
+        end)
+
     end)
 
     hook.Add("PlayerDisconnected", "AC_SCP049.CleanUpPlayer", function(ply)

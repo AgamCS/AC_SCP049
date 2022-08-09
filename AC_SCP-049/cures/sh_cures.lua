@@ -239,9 +239,4 @@ function AC_SCP49.startCureMix(ply, cureType)
     if SERVER && !IsValid(ply) then return end
 end
 
-if SERVER then
-    function AC_SCP49.applyCure(ply)
-
-    end
-end
 

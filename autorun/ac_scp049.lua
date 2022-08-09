@@ -6,19 +6,15 @@ local function addDir(path)
             if string.StartWith(v, "sh_") then
                 if SERVER then
                     AddCSLuaFile(path .. v)
-                    print("[SCP-049] Added CS File:" .. path..v)
                 end
                 include(path .. v)
             elseif string.StartWith(v, "sv_") then
                 include(path .. v)
-                print("[SCP-049] Added SV File:" .. path..v)
             elseif  string.StartWith(v, "cl_") then
                 if SERVER then
                     AddCSLuaFile(path .. v)
-                    print("[SCP-049] Added CS File:" .. path..v)
                 elseif CLIENT then
                     include(path .. v)
-                    print("[SCP-049] Added CS File:" .. path..v)
                 end
             end
         end
@@ -51,8 +47,11 @@ if SERVER then
     util.AddNetworkString("ac_scp049.verifyConfigChanges")
     util.AddNetworkString("ac_scp049.sendConfigToClients")
     util.AddNetworkString("ac_scp049.checkRank")
+    util.AddNetworkString("ac_scp049.sendReviveCam")
 
 end
+
+MsgC(Color(0, 255, 0), "[SCP 049]: All files loaded")
 
 if CLIENT then
     AC_SCP49.mixStartTime = 0

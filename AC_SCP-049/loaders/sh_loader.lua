@@ -2,9 +2,14 @@ local dataDir = "ac_scp049"
 local configDir = dataDir .. "/config.txt"
 
 local function loadConfig()
-    local contents = file.Read(configDir)
-    contents = util.JSONToTable(contents)
+    local config = file.Read(configDir)
+    local contents = util.JSONToTable(config)
     AC_SCP49.config = contents
+    net.Start("ac_scp049.loadClientConfig")
+        local config = util.Compress(config)
+        net.WriteUInt(#config, 16)
+        net.WriteData(config, #config)
+    net.Broadcast()
 end
 
 if SERVER then

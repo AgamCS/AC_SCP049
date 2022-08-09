@@ -37,7 +37,7 @@ local progress = Color(150, 150, 150)
 local DEBUG = true
 
 function SWEP:Initalize()
-    self:SetHoldType("normal")
+    self:SetHoldType("pistol")
 end
 
 function SWEP:Deploy()
@@ -62,9 +62,9 @@ function SWEP:PrimaryAttack()
     })
     if !tr.Entity:IsValid() then owner:LagCompensation( false ) return end    
     if tr.Entity:GetNW2Bool("IsPlayerRagdoll", false) then
-        if !tr.Entity.DeathRagdoll then return end
+        if !tr.Entity.DeathRagdoll then owner:LagCompensation( false ) return end
         local cureType = owner:getCurrentCure()
-        if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") return end
+        if !cureType then DarkRP.notify(self, 1, 5, "You do not have a cure equipped!") owner:LagCompensation( false ) return end
         local victim = tr.Entity.DeathRagdoll:GetOwner()
         tr.Entity.DeathRagdoll.IsDeath = false
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)

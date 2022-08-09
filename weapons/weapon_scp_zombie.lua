@@ -48,7 +48,7 @@ SWEP.Primary.maxDamge = 28
 
 local phys_pushscale = GetConVar( "phys_pushscale" )
 local SwingSound = Sound( "WeaponFrag.Throw" )
-local HitSound = Sound( "Flesh.ImpactHard" )
+local HitSound = Sound( "npc/zombie/claw_strike2.wav" )
 
 // Minimmum amount of time before the next zombie sound
 local nextSoundDelayMin = 60

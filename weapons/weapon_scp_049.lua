@@ -34,7 +34,7 @@ local edges = Color(255,255,255,120)
 local progress = Color(150, 150, 150)
 
 // DEBUG
-local DEBUG = true
+local DEBUG = false
 
 function SWEP:Initalize()
     self:SetHoldType("pistol")
@@ -53,6 +53,7 @@ function SWEP:PrimaryAttack()
     self:SetSequence("flask_mix")
     self:ResetSequence("flask_mix")
     self:SetNextPrimaryFire( CurTime() + self.Primary.AttackDelay )
+    owner:LagCompensation( false )
     if !SERVER then return end
     local tr = util.TraceLine( {
         start = owner:EyePos(),
@@ -69,7 +70,6 @@ function SWEP:PrimaryAttack()
         tr.Entity.DeathRagdoll.IsDeath = false
         SafeRemoveEntityDelayed(tr.Entity.DeathRagdoll, 0.3)
         owner:applyCureToVictim(cureType, tr.Entity.DeathRagdoll:GetOwner())
-        
     elseif tr.Entity:IsValid() && !AC_SCP49.config["immuneModels"][tr.Entity:GetModel()] then
         tr.Entity:TakeDamage(tr.Entity:Health(), owner, self)
     end
